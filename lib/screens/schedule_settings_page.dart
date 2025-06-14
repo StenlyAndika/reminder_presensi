@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../services/notification_service.dart';
+import '../services/permission_handler.dart';
 
 class ScheduleSettingsPage extends StatefulWidget {
   const ScheduleSettingsPage({super.key});
@@ -21,7 +22,7 @@ class _ScheduleSettingsPageState extends State<ScheduleSettingsPage> {
   @override
   void initState() {
     super.initState();
-
+    PermissionHandler.checkAndRequestAlarmPermission(context);
     // 🟡 Load saved schedule or fallback to default
     monThuMorning = loadSchedule('monThuMorning', fallback: const TimeOfDay(hour: 7, minute: 26));
     monThuNoon = loadSchedule('monThuNoon', fallback: const TimeOfDay(hour: 13, minute: 1));
@@ -53,18 +54,14 @@ class _ScheduleSettingsPageState extends State<ScheduleSettingsPage> {
           children: [
             const Text("Senin - Kamis", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
-
             buildTimePicker("Absen Pagi", monThuMorning, (val) => setState(() => monThuMorning = val)),
             buildTimePicker("Absen Siang", monThuNoon, (val) => setState(() => monThuNoon = val)),
             buildTimePicker("Absen Sore", monThuEvening, (val) => setState(() => monThuEvening = val)),
-
             const SizedBox(height: 24),
             const Text("Jumat", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
-
             buildTimePicker("Absen Pagi", friMorning, (val) => setState(() => friMorning = val)),
             buildTimePicker("Absen Sore", friEvening, (val) => setState(() => friEvening = val)),
-
             const SizedBox(height: 32),
             ElevatedButton(
               onPressed: () {

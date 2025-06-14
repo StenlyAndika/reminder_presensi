@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'dart:typed_data';
 import 'package:external_app_launcher/external_app_launcher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -20,7 +20,7 @@ TimeOfDay loadSchedule(String key, {required TimeOfDay fallback}) {
 }
 
 class NotificationService {
-	static final FlutterLocalNotificationsPlugin notificationsPlugin = FlutterLocalNotificationsPlugin();
+  static final FlutterLocalNotificationsPlugin notificationsPlugin = FlutterLocalNotificationsPlugin();
 
   static Future<void> initialize() async {
     await _initNotification();
@@ -115,13 +115,18 @@ void _scheduleDailyNotification(int id, int weekday, int hour, int minute, Strin
     'Absen Reminder',
     message,
     _nextInstanceOfWeekdayTime(weekday, hour, minute),
-    const NotificationDetails(
+    NotificationDetails(
       android: AndroidNotificationDetails(
-        'daily_notif_channel',
+        'daily_notif_channel_v2',
         'Daily Notifications',
         channelDescription: 'Scheduled daily reminders',
         importance: Importance.max,
         priority: Priority.high,
+        playSound: true,
+        enableVibration: true,
+        vibrationPattern: Int64List.fromList([0, 300, 100, 300, 100, 300]),
+        ticker: 'Absen Reminder',
+        visibility: NotificationVisibility.public, // 🔐 for lockscreen
       ),
     ),
     matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,
